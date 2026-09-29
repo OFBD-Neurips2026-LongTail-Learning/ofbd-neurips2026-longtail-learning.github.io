@@ -287,7 +287,6 @@ Code
 
 
 
-
 <!-- Teaser -->
 
 <section class="hero teaser">
@@ -297,13 +296,17 @@ Code
 <div class="hero-body has-text-centered">
 
 
-<iframe
-src="static/images/Figure_overview.pdf"
-width="100%"
-height="350px"
-style="border:none;">
-</iframe>
-
+<img
+src="static/images/Figure_overview-1.png"
+alt="OFBD Overview"
+style="
+width:95%;
+max-width:1100px;
+height:auto;
+margin:auto;
+display:block;
+border-radius:8px;
+">
 
 
 <h2 class="subtitle has-text-centered"
@@ -314,8 +317,11 @@ style="margin-top:20px;font-size:1rem;">
 Figure 1: Overview of OFBD.
 </b>
 
-OFBD addresses background bias in long-tailed recognition from both distribution and optimization perspectives.
-Foreground-guided CutMix preserves target-related foregrounds while Background-guided Feature Rectification suppresses background-biased features.
+OFBD addresses background bias in long-tailed recognition from both
+distribution and optimization perspectives.
+Foreground-guided CutMix preserves target-related foregrounds,
+while Background-guided Feature Rectification suppresses
+background-biased features.
 
 
 </h2>
@@ -407,7 +413,6 @@ without external data or pretrained recognition models.
 
 
 </section>
-
 <!-- Method -->
 
 <section class="section">
@@ -427,12 +432,19 @@ Method
 </h2>
 
 
-<iframe
-src="static/images/Figure_pipeline.pdf"
-width="100%"
-height="420px"
-style="border:none;">
-</iframe>
+
+<img
+src="static/images/Figure_pipeline-1.png"
+alt="OFBD Pipeline"
+style="
+width:100%;
+max-width:1200px;
+height:auto;
+margin:auto;
+display:block;
+border-radius:8px;
+">
+
 
 
 <div class="content has-text-justified"
@@ -444,31 +456,36 @@ style="margin-top:25px;">
 Our proposed
 <b>Object-Focused Background Debiasing (OFBD)</b>
 framework tackles background bias from two complementary perspectives.
-First,
+
+</p>
+
+
+<p>
+
 <b>Foreground-guided CutMix (FG-CutMix)</b>
-reduces distribution-level background bias by preserving target-related foreground regions
-while replacing complementary backgrounds.
+reduces distribution-level background bias by preserving
+target-related foreground regions while replacing complementary
+backgrounds.
 
 </p>
 
 
 <p>
 
-Second,
 <b>Background-guided Feature Rectification (BFR)</b>
-addresses optimization-level background bias by estimating background-aware scores from feature statistics
-and suppressing background-biased feature locations.
-Unlike learnable feature correction strategies,
-BFR introduces no additional parameters and avoids head-class dominated optimization.
+addresses optimization-level background bias by estimating
+background-aware scores from feature statistics and suppressing
+background-biased feature locations without introducing additional
+parameters.
 
 </p>
 
 
 <p>
 
-Together, FG-CutMix and BFR encourage models to focus on object-related semantic information
-rather than spurious contextual backgrounds,
-providing a lightweight and effective solution for long-tailed recognition.
+Together, FG-CutMix and BFR encourage models to focus on semantic
+foreground information rather than spurious contextual cues,
+providing an efficient plug-in solution for long-tailed recognition.
 
 </p>
 
