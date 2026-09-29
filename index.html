@@ -1,240 +1,766 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  
-  <meta name="title" content="Reframing Long-Tailed Learning via Loss Landscape Geometry">
-  <meta name="description" content="A novel continual learning inspired framework tackling the long-tail dilemma via Loss Landscape Geometry, mitigating tail performance degradation through Grouped Knowledge Preservation and Grouped Sharpness Aware modules.">
-  <meta name="keywords" content="Long-Tailed Learning, Loss Landscape, Continual Learning, Sharpness-Aware Minimization, Computer Vision, Deep Learning">
-  <meta name="author" content="Shenghan Chen, Yiming Liu, Yanzhen Wang, Yujia Wang, Xiankai Lu">
-  <meta name="robots" content="index, follow">
-  <meta name="language" content="English">
-  
+
+  <meta name="title" content="OFBD: Object-Focused Background Debiasing for Long-Tailed Learning">
+  <meta name="description"
+    content="OFBD mitigates background bias in long-tailed recognition through foreground-guided CutMix and background-guided feature rectification.">
+  <meta name="keywords"
+    content="Long-Tailed Learning, Background Debiasing, CutMix, Feature Rectification, Deep Learning, Computer Vision">
+  <meta name="author"
+    content="Shenghan Chen, Yiming Liu, Zhipeng Deng, Haolin Wang, Jiale Zhou, Zhijian Wu, Xiankai Lu, Yafei Ou, Yefeng Zheng">
+
   <meta property="og:type" content="article">
-  <meta property="og:site_name" content="GKP-GSA Project Page">
-  <meta property="og:title" content="Reframing Long-Tailed Learning via Loss Landscape Geometry">
-  <meta property="og:description" content="A novel continual learning inspired framework tackling the long-tail dilemma via Loss Landscape Geometry, achieving SOTA on CIFAR and ImageNet-LT.">
-  <meta property="og:url" content="https://gkp-gsa.github.io/">
-  <meta property="og:image" content="static/images/Figure1.png">
-  <meta property="og:image:width" content="1200">
-  <meta property="og:image:height" content="630">
-  
-  <title>Reframing Long-Tailed Learning via Loss Landscape Geometry</title>
-  
+  <meta property="og:title"
+    content="OFBD: Object-Focused Background Debiasing for Long-Tailed Learning">
+  <meta property="og:description"
+    content="A framework that reduces background bias from both distribution and optimization perspectives for long-tailed recognition.">
+  <meta property="og:image" content="static/images/exp1.png">
+
+  <title>
+    OFBD: Object-Focused Background Debiasing for Long-Tailed Learning
+  </title>
+
   <link rel="icon" type="image/x-icon" href="static/images/favicon.ico">
-  
+
   <link rel="stylesheet" href="static/css/bulma.min.css">
   <link rel="stylesheet" href="static/css/index.css">
   <link rel="stylesheet" href="static/css/bulma-carousel.min.css">
   <link rel="stylesheet" href="static/css/bulma-slider.min.css">
   <link rel="stylesheet" href="static/css/fontawesome.all.min.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
-  
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet">
+
   <script defer src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script defer src="static/js/fontawesome.all.min.js"></script>
   <script defer src="static/js/bulma-carousel.min.js"></script>
   <script defer src="static/js/bulma-slider.min.js"></script>
   <script defer src="static/js/index.js"></script>
+
 </head>
+
+
 <body>
 
-  <button class="scroll-to-top" onclick="window.scrollTo(0,0)" title="Scroll to top" aria-label="Scroll to top" style="position:fixed; bottom:20px; right:20px; z-index:99;">
-    <i class="fas fa-chevron-up"></i>
-  </button>
 
-  <main id="main-content">
-  <section class="hero">
-    <div class="hero-body">
-      <div class="container is-max-desktop">
-        <div class="columns is-centered">
-          <div class="column has-text-centered">
-            <h1 class="title is-2 publication-title">Reframing Long-Tailed Learning via Loss Landscape Geometry</h1>
-            
-            <div class="is-size-5 publication-authors">
-              <span class="author-block">
-                <a href="https://chenshenghan100.github.io/ChenShengHan.github.io/#" target="_blank">Shenghan Chen</a><sup>1,*</sup>,
-              </span>
-              <span class="author-block">
-                Yiming Liu<sup>2,*</sup>,
-              </span>
-              <span class="author-block">
-                Yanzhen Wang<sup>1</sup>,
-              </span>
-              <span class="author-block">
-                Yujia Wang<sup>1</sup>,
-              </span>
-              <span class="author-block">
-                Xiankai Lu<sup>1,✉</sup>
-              </span>
-            </div>
+<button class="scroll-to-top"
+  onclick="window.scrollTo(0,0)"
+  title="Scroll to top"
+  aria-label="Scroll to top"
+  style="position:fixed; bottom:20px; right:20px; z-index:99;">
 
-            <div class="is-size-5 publication-authors" style="margin-top: 10px;">
-              <span class="author-block"><sup>1</sup>Shandong University,</span>
-              <span class="author-block" style="margin-left: 15px;"><sup>2</sup>Zhejiang Sci-Tech University</span>
-              <br>
-              <span class="author-block" style="margin-top: 10px; font-weight: 600; color: #363636;">Accepted by CVPR 2026</span>
-              <span class="eql-cntrb"><small><br><sup>*</sup>Equal Contribution &nbsp; <sup>✉</sup>Corresponding Author</small></span>
-            </div>
+  <i class="fas fa-chevron-up"></i>
 
-            <div class="column has-text-centered" style="margin-top: 15px;">
-              <div class="publication-links">
-                <span class="link-block">
-                  <a href="static/pdfs/Paper.pdf" target="_blank"
-                  class="external-link button is-normal is-rounded is-dark">
-                  <span class="icon">
-                    <i class="fas fa-file-pdf"></i>
-                  </span>
-                  <span>Paper</span>
-                  </a>
-                </span>
+</button>
 
-                <span class="link-block">
-                  <a href="static/pdfs/Supplement.pdf" target="_blank"
-                  class="external-link button is-normal is-rounded is-dark">
-                  <span class="icon">
-                    <i class="fas fa-file-pdf"></i>
-                  </span>
-                  <span>Supplement</span>
-                  </a>
-                </span>
 
-                <span class="link-block">
-                  <a href="https://github.com/ChenShengHan100/gkp-gsa" target="_blank"
-                  class="external-link button is-normal is-rounded is-dark">
-                  <span class="icon">
-                    <i class="fab fa-github"></i>
-                  </span>
-                  <span>Code
-                  </span>
-                  </a>
-                </span>
 
-                <span class="link-block">
-                  <a href="https://arxiv.org/abs/2603.21217" target="_blank"
-                  class="external-link button is-normal is-rounded is-dark">
-                  <span class="icon">
-                    <i class="ai ai-arxiv"></i>
-                  </span>
-                  <span>arXiv</span>
-                  </a>
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+<main id="main-content">
 
-  <section class="hero teaser">
-    <div class="container is-max-desktop">
-      <div class="hero-body has-text-centered">
-        <img src="static/images/Figure1.png" alt="Tail performance degradation from the loss landscape view" style="max-width: 100%; border-radius: 8px;">
-        <h2 class="subtitle has-text-centered" style="margin-top: 15px; font-size: 1rem;">
-          <b>Figure 1: "Tail performance degradation" from the loss landscape view.</b> Standard training converges to a sharp region causing tail performance degradation. Our optimization steers the model towards a solution that remains closer to the tail-class minimum and resides in a flatter region.
-        </h2>
-      </div>
-    </div>
-  </section>
 
-  <section class="section hero is-light">
-    <div class="container is-max-desktop">
-      <div class="columns is-centered has-text-centered">
-        <div class="column is-four-fifths">
-          <h2 class="title is-3">Abstract</h2>
-          <div class="content has-text-justified">
-            <p>
-              Balancing performance trade-off on long-tail (LT) data distributions remains a long-standing challenge. In this paper, we posit that this dilemma stems from a phenomenon called <b>"tail performance degradation"</b> (the model tends to severely overfit on head classes while quickly forgetting tail classes) and pose a solution from a loss landscape perspective. 
-            </p>
-            <p>
-              We observe that different classes possess divergent convergence points in the loss landscape. Besides, this divergence is aggravated when the model settles into sharp and non-robust minima, rather than a shared and flat solution that is beneficial for all classes. In light of this, we propose a continual learning inspired framework to prevent "tail performance degradation". To avoid inefficient per-class parameter preservation, a <b>Grouped Knowledge Preservation (GKP)</b> module is proposed to memorize group-specific convergence parameters, promoting convergence towards a shared solution. Concurrently, our framework integrates a <b>Grouped Sharpness Aware (GSA)</b> module to seek flatter minima by explicitly addressing the geometry of the loss landscape. 
-            </p>
-            <p>
-              Notably, our framework requires neither external training samples nor pre-trained models, facilitating the broad applicability. Extensive experiments on four benchmarks demonstrate significant performance gains over state-of-the-art methods.
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+<section class="hero">
 
-  <section class="section">
-    <div class="container is-max-desktop">
-      <div class="columns is-centered has-text-centered">
-        <div class="column is-full">
-          <h2 class="title is-3">Proposed Framework</h2>
-          <img src="static/images/Figure3.png" alt="Overall Framework of GSA and GKP" style="max-width: 100%; margin-top: 20px;">
-          <div class="content has-text-justified" style="margin-top: 20px;">
-            <p>
-              Our framework consists of two key components: <b>(a) The Grouped Sharpness Aware (GSA) module</b>, which minimizes group-specific sharpness to find flat minima by removing the head-dominated global perturbation direction. <b>(b) The Grouped Knowledge Preservation (GKP) module</b>, which prevents tail performance degradation of other groups' optimal parameters using a Memory-based Grouping Strategy.
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+<div class="hero-body">
+
+<div class="container is-max-desktop">
+
+<div class="columns is-centered">
+
+<div class="column has-text-centered">
+
+
+<h1 class="title is-2 publication-title">
+OFBD: Object-Focused Background Debiasing for Long-Tailed Learning
+</h1>
+
+
+
+<div class="is-size-5 publication-authors">
+
+
+<span class="author-block">
+<a href="#" target="_blank">
+Shenghan Chen
+</a><sup>1,2,*</sup>,
+</span>
+
+
+<span class="author-block">
+Yiming Liu<sup>2</sup>,
+</span>
+
+
+<span class="author-block">
+Zhipeng Deng<sup>1</sup>,
+</span>
+
+
+<span class="author-block">
+Haolin Wang<sup>3</sup>,
+</span>
+
+
+<span class="author-block">
+Jiale Zhou<sup>1</sup>,
+</span>
+
+
+<span class="author-block">
+Zhijian Wu<sup>1</sup>,
+</span>
+
+
+<span class="author-block">
+Xiankai Lu<sup>2</sup>,
+</span>
+
+
+<span class="author-block">
+Yafei Ou<sup>5,†</sup>,
+</span>
+
+
+<span class="author-block">
+Yefeng Zheng<sup>1,†</sup>
+</span>
+
+
+</div>
+
+
+
+<div class="is-size-5 publication-authors"
+style="margin-top:15px;">
+
+
+<span class="author-block">
+<sup>1</sup>Westlake University
+</span>
+
+
+<span class="author-block"
+style="margin-left:15px;">
+<sup>2</sup>Shandong University
+</span>
+
+
+<span class="author-block"
+style="margin-left:15px;">
+<sup>3</sup>Hokkaido University
+</span>
+
+
+<span class="author-block"
+style="margin-left:15px;">
+<sup>5</sup>RIKEN
+</span>
+
+
+<br>
+
+
+<span class="author-block"
+style="margin-top:10px;font-weight:600;">
+
+NeurIPS 2026
+
+</span>
+
+
+<br>
+
+
+<span class="eql-cntrb">
+<small>
+<sup>*</sup>Equal Contribution
+&nbsp;&nbsp;
+<sup>†</sup>Corresponding Authors
+</small>
+</span>
+
+
+</div>
+
+
+
+
+
+<div class="column has-text-centered"
+style="margin-top:20px;">
+
+
+<div class="publication-links">
+
+
+<span class="link-block">
+
+<a href="static/pdfs/OFBD_Paper.pdf"
+target="_blank"
+class="external-link button is-normal is-rounded is-dark">
+
+
+<span class="icon">
+<i class="fas fa-file-pdf"></i>
+</span>
+
+<span>
+Paper
+</span>
+
+
+</a>
+
+</span>
+
+
+
+
+
+<span class="link-block">
+
+<a href="static/pdfs/OFBD_Supplement.pdf"
+target="_blank"
+class="external-link button is-normal is-rounded is-dark">
+
+
+<span class="icon">
+<i class="fas fa-file-pdf"></i>
+</span>
+
+
+<span>
+Supplement
+</span>
+
+
+</a>
+
+</span>
+
+
+
+
+
+<span class="link-block">
+
+<a href="https://ofbd-neurips2026-longtail-learning.github.io/"
+target="_blank"
+class="external-link button is-normal is-rounded is-dark">
+
+
+<span class="icon">
+<i class="fab fa-github"></i>
+</span>
+
+
+<span>
+Code
+</span>
+
+
+</a>
+
+</span>
+
+
+
+</div>
+
+</div>
+
+
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+
+
+
+<!-- Teaser -->
+
+<section class="hero teaser">
+
+<div class="container is-max-desktop">
+
+<div class="hero-body has-text-centered">
+
+
+<iframe
+src="static/images/Figure_overview.pdf"
+width="100%"
+height="600px"
+style="border:none;">
+</iframe>
+
+
+
+<h2 class="subtitle has-text-centered"
+style="margin-top:20px;font-size:1rem;">
+
+
+<b>
+Figure 1: Overview of OFBD.
+</b>
+
+OFBD addresses background bias in long-tailed recognition from both distribution and optimization perspectives.
+Foreground-guided CutMix preserves target-related foregrounds while Background-guided Feature Rectification suppresses background-biased features.
+
+
+</h2>
+
+
+</div>
+
+</div>
+
+</section>
+
+
+
+
+
+<!-- Abstract -->
+
+
+<section class="section hero is-light">
+
+
+<div class="container is-max-desktop">
+
+
+<div class="columns is-centered has-text-centered">
+
+
+<div class="column is-four-fifths">
+
+
+<h2 class="title is-3">
+Abstract
+</h2>
+
+
+<div class="content has-text-justified">
+
+
+<p>
+
+Balancing performance trade-offs on long-tailed data distributions remains a long-standing challenge in visual recognition.
+Existing methods mainly improve tail classes through re-balancing, representation learning, or data augmentation,
+but the underlying cause of tail degradation remains insufficiently explored.
+
+</p>
+
+
+<p>
+
+In this paper, we reveal that standard long-tailed training induces
+<b>background-biased representation and optimization</b>.
+Tail classes suffer larger background distribution shifts and become increasingly driven by background gradients,
+causing models to rely on irrelevant contextual cues rather than discriminative foreground information.
+
+</p>
+
+
+<p>
+
+To address this issue, we propose
+<b>Object-Focused Background Debiasing (OFBD)</b>,
+a framework that mitigates background bias from both distribution and optimization perspectives.
+Specifically, Foreground-guided CutMix preserves target-related foregrounds while diversifying backgrounds,
+and Background-guided Feature Rectification suppresses background-biased features without learnable parameters.
+
+</p>
+
+
+<p>
+
+Extensive experiments demonstrate that OFBD improves overall accuracy,
+achieves significant tail-class gains,
+and serves as a plug-in framework for mainstream long-tailed recognition methods
+without external data or pretrained recognition models.
+
+</p>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+</section>
+
+<!-- Method -->
+
+<section class="section">
+
+
+<div class="container is-max-desktop">
+
+
+<div class="columns is-centered has-text-centered">
+
+
+<div class="column is-full">
+
+
+<h2 class="title is-3">
+Method
+</h2>
+
+
+<iframe
+src="static/images/Figure_pipeline.pdf"
+width="100%"
+height="650px"
+style="border:none;">
+</iframe>
+
+
+<div class="content has-text-justified"
+style="margin-top:25px;">
+
+
+<p>
+
+Our proposed
+<b>Object-Focused Background Debiasing (OFBD)</b>
+framework tackles background bias from two complementary perspectives.
+First,
+<b>Foreground-guided CutMix (FG-CutMix)</b>
+reduces distribution-level background bias by preserving target-related foreground regions
+while replacing complementary backgrounds.
+
+</p>
+
+
+<p>
+
+Second,
+<b>Background-guided Feature Rectification (BFR)</b>
+addresses optimization-level background bias by estimating background-aware scores from feature statistics
+and suppressing background-biased feature locations.
+Unlike learnable feature correction strategies,
+BFR introduces no additional parameters and avoids head-class dominated optimization.
+
+</p>
+
+
+<p>
+
+Together, FG-CutMix and BFR encourage models to focus on object-related semantic information
+rather than spurious contextual backgrounds,
+providing a lightweight and effective solution for long-tailed recognition.
+
+</p>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+</section>
+
+
+
+
+
+
+<!-- Results -->
+
 
 <section class="hero is-small is-light">
-    <div class="hero-body">
-      <div class="container is-max-desktop" style="max-width: 900px;">
-        <h2 class="title is-3 has-text-centered">Key Analysis & Results</h2>
-        <div id="results-carousel" class="carousel results-carousel">
-          
-          <div class="item has-text-centered">
-            <img src="static/images/Figure2.png" alt="Feature Quality and Geometry" loading="lazy" style="height: 400px; width: auto; margin: 0 auto; display: block;"/>
-            <h2 class="subtitle has-text-centered" style="margin-top: 15px; font-size: 0.9rem;">
-              Our method flattens the landscape and preserves high feature quality for both head and tail classes.
-            </h2>
-          </div>
 
-          <div class="item has-text-centered">
-            <img src="static/images/Figure4.png" alt="Gradient Decomposition" loading="lazy" style="height: 400px; width: auto; margin: 0 auto; display: block;"/>
-            <h2 class="subtitle has-text-centered" style="margin-top: 15px; font-size: 0.9rem;">
-              Gradient decomposition: Removing the head-dominated global perturbation direction to extract the beneficial, group-specific gradient.
-            </h2>
-          </div>
 
-          <div class="item has-text-centered">
-            <img src="static/images/Figure9.png" alt="Eigenvalue density" loading="lazy" style="height: 400px; width: auto; margin: 0 auto; display: block;"/>
-            <h2 class="subtitle has-text-centered" style="margin-top: 15px; font-size: 0.9rem;">
-              Eigenvalue density distributions showing our method successfully yields a flatter loss surface compared to CE and SAM.
-            </h2>
-          </div>
+<div class="hero-body">
 
-        </div>
-      </div>
-    </div>
-  </section>
 
-  <section class="section" id="BibTeX">
-    <div class="container is-max-desktop content">
-      <h2 class="title">BibTeX</h2>
-      <pre><code>@article{chen2026reframing,
-  title={Reframing Long-Tailed Learning via Loss Landscape Geometry},
-  author={Chen, Shenghan and Liu, Yiming and Wang, Yanzhen and Wang, Yujia and Lu, Xiankai},
-  journal={arXiv preprint arXiv:2603.21217},
-  year={2026}
+<div class="container is-max-desktop">
+
+
+<h2 class="title is-3 has-text-centered">
+
+Experimental Results
+
+</h2>
+
+
+
+<div id="results-carousel"
+class="carousel results-carousel">
+
+
+
+
+
+<div class="item has-text-centered">
+
+
+<img
+src="static/images/exp1.png"
+alt="Motivation analysis"
+loading="lazy"
+style="height:420px;width:auto;margin:auto;display:block;">
+
+
+<h2 class="subtitle"
+style="margin-top:15px;font-size:1rem;">
+
+
+<b>
+Motivation Analysis.
+</b>
+
+OFBD reveals that tail classes suffer from stronger background bias
+in both representation and optimization.
+
+
+</h2>
+
+
+</div>
+
+
+
+
+
+
+<div class="item has-text-centered">
+
+
+<img
+src="static/images/exp2.png"
+alt="Main results"
+loading="lazy"
+style="height:420px;width:auto;margin:auto;display:block;">
+
+
+<h2 class="subtitle"
+style="margin-top:15px;font-size:1rem;">
+
+
+<b>
+Main Results.
+</b>
+
+OFBD consistently improves long-tailed recognition performance
+across CIFAR-LT, ImageNet-LT, and iNaturalist benchmarks.
+
+
+</h2>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="item has-text-centered">
+
+
+<img
+src="static/images/exp3.png"
+alt="Ablation study"
+loading="lazy"
+style="height:420px;width:auto;margin:auto;display:block;">
+
+
+<h2 class="subtitle"
+style="margin-top:15px;font-size:1rem;">
+
+
+<b>
+Ablation Study.
+</b>
+
+Both FG-CutMix and BFR contribute complementary improvements,
+especially benefiting tail classes.
+
+
+</h2>
+
+
+</div>
+
+
+
+
+
+
+
+
+<div class="item has-text-centered">
+
+
+<img
+src="static/images/exp4.png"
+alt="Further analysis"
+loading="lazy"
+style="height:420px;width:auto;margin:auto;display:block;">
+
+
+<h2 class="subtitle"
+style="margin-top:15px;font-size:1rem;">
+
+
+<b>
+Further Analysis.
+</b>
+
+OFBD effectively reduces background reliance and improves
+foreground-focused representation learning.
+
+
+</h2>
+
+
+</div>
+
+
+
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+</section>
+
+
+
+
+
+
+
+<!-- BibTeX -->
+
+
+<section class="section" id="BibTeX">
+
+
+<div class="container is-max-desktop content">
+
+
+<h2 class="title">
+BibTeX
+</h2>
+
+
+
+<pre><code>
+@inproceedings{chen2026ofbd,
+
+title={OFBD: Object-Focused Background Debiasing for Long-Tailed Learning},
+
+author={Chen, Shenghan and Liu, Yiming and Deng, Zhipeng and Wang, Haolin and Zhou, Jiale and Wu, Zhijian and Lu, Xiankai and Ou, Yafei and Zheng, Yefeng},
+
+booktitle={Advances in Neural Information Processing Systems},
+
+year={2026}
+
 }
-}</code></pre>
-    </div>
-  </section>
+</code></pre>
 
-  <footer class="footer">
-    <div class="container">
-      <div class="columns is-centered">
-        <div class="column is-8">
-          <div class="content">
-            <p>
-              This page was built using the <a href="https://github.com/eliahuhorwitz/Academic-project-page-template" target="_blank">Academic Project Page Template</a>.
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </footer>
-  </main>
+
+
+</div>
+
+
+</section>
+
+
+
+
+
+
+
+
+<footer class="footer">
+
+
+<div class="container">
+
+
+<div class="columns is-centered">
+
+
+<div class="column is-8">
+
+
+<div class="content has-text-centered">
+
+
+<p>
+
+
+This page was built using the
+<a href="https://github.com/eliahuhorwitz/Academic-project-page-template"
+target="_blank">
+
+Academic Project Page Template
+
+</a>
+
+
+</p>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+</footer>
+
+
+
+
+</main>
+
+
+
 </body>
+
+
 </html>
