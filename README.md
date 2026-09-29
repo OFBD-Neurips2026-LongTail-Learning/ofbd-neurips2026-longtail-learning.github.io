@@ -1,80 +1,186 @@
-# Academic Project Page Template
+# OFBD
 
-> **Update (September 2025)**: This template has been modernized with better design, SEO, and mobile support. For the original version, see the [original-version branch](https://github.com/eliahuhorwitz/Academic-project-page-template/tree/original-version).
-
-A clean, responsive template for academic project pages.
+## OFBD: Object-Focused Background Debiasing for Long-Tailed Learning
 
 
-Example project pages built using this template are:
-- https://horwitz.ai/probex
-- https://vision.huji.ac.il/probegen
-- https://horwitz.ai/mother
-- https://horwitz.ai/spectral_detuning
-- https://vision.huji.ac.il/ladeda
-- https://vision.huji.ac.il/dsire
-- https://horwitz.ai/podd
-- https://dreamix-video-editing.github.io
-- https://horwitz.ai/conffusion
-- https://horwitz.ai/3d_ads/
-- https://vision.huji.ac.il/ssrl_ad
-- https://vision.huji.ac.il/deepsim
+<p align="center">
+<img src="static/images/Figure_overview-1.png" width="95%">
+</p>
+
+
+OFBD is a long-tailed image recognition framework that mitigates background bias from both distribution and optimization perspectives.
+
+Existing long-tailed recognition methods mainly focus on re-balancing, representation learning, or data augmentation. OFBD reveals that long-tailed training introduces background-biased representations and optimization dynamics, causing tail classes to rely on irrelevant contextual cues.
+
+To address this issue, OFBD introduces two complementary components:
+
+- **Foreground-guided CutMix (FG-CutMix)** for reducing distribution-level background bias.
+- **Background-guided Feature Rectification (BFR)** for suppressing optimization-level background bias.
+
+Together, OFBD encourages models to focus on target-related foreground semantics rather than spurious background information.
+
+
+<p align="center">
+<a href="static/pdfs/OFBD_Paper.pdf">
+<img src="https://img.shields.io/badge/Paper-PDF-red">
+</a>
+
+<a href="static/pdfs/OFBD_Supplement.pdf">
+<img src="https://img.shields.io/badge/Supplement-PDF-blue">
+</a>
+</p>
 
 
 
-## Start using the template
-To start using the template click on `Use this Template`.
+# Method
 
-The template uses html for controlling the content and css for controlling the style. 
-To edit the websites contents edit the `index.html` file. It contains different HTML "building blocks", use whichever ones you need and comment out the rest.  
 
-**IMPORTANT!** Make sure to replace the `favicon.ico` under `static/images/` with one of your own, otherwise your favicon is going to be a dreambooth image of me.
+<p align="center">
+<img src="static/images/Figure_pipeline-1.png" width="100%">
+</p>
 
-## What's New
 
-- Modern, clean design with better mobile support
-- Improved SEO with proper meta tags and structured data
-- Performance improvements (lazy loading, optimized assets)
-- More Works dropdown
-- Copy button for BibTeX citations
-- Better accessibility
 
-## Components
+OFBD consists of two major modules:
 
-- Teaser video
-- Image carousel
-- YouTube video embedding
-- Video carousel
-- PDF poster viewer
-- BibTeX citation
 
-## Customization
+### Foreground-guided CutMix (FG-CutMix)
 
-The HTML file has TODO comments showing what to replace:
+FG-CutMix preserves target-related foreground regions while replacing complementary backgrounds.
 
-- Paper title, authors, institution, conference
-- Links (arXiv, GitHub, etc.)
-- Abstract and descriptions  
-- Videos, images, and PDFs
-- Related works in the dropdown
-- Meta tags for SEO and social sharing
+Unlike conventional CutMix, which may randomly introduce irrelevant backgrounds, FG-CutMix selects informative foreground regions to reduce foreground-background co-occurrence and improve tail-class representation learning.
 
-### Meta Tags
-The template includes meta tags for better search engine visibility and social media sharing. These appear in the `<head>` section and help with:
-- Google Scholar indexing
-- Social media previews (Twitter, Facebook, LinkedIn)
-- Search engine optimization
 
-Create a 1200x630px social preview image at `static/images/social_preview.png`.
 
-## Tips
+### Background-guided Feature Rectification (BFR)
 
-- Compress images with [TinyPNG](https://tinypng.com)
-- Use YouTube for large videos (>10MB)  
-- Replace the favicon in `static/images/`
-- Works with GitHub Pages
+BFR estimates background-aware scores from feature statistics and suppresses background-biased feature locations.
 
-## Acknowledgments
-Parts of this project page were adopted from the [Nerfies](https://nerfies.github.io/) page.
+It introduces no additional learnable parameters and avoids head-class dominated optimization, making it suitable for long-tailed recognition.
 
-## Website License
-<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
+
+
+# Visualization and Results
+
+
+## Motivation Analysis
+
+
+<p align="center">
+<img src="static/images/exp1.png" width="95%">
+</p>
+
+
+
+## Main Results
+
+
+<p align="center">
+<img src="static/images/exp2.png" width="95%">
+</p>
+
+
+
+## Ablation Study
+
+
+<p align="center">
+<img src="static/images/exp3.png" width="95%">
+</p>
+
+
+
+## Further Analysis
+
+
+<p align="center">
+<img src="static/images/exp4.png" width="95%">
+</p>
+
+
+
+
+# Repository Structure
+
+
+```
+OFBD.github.io/
+
+├── index.html
+
+├── static/
+
+│   ├── images/
+
+│   │   ├── Figure_overview-1.png
+
+│   │   ├── Figure_pipeline-1.png
+
+│   │   ├── exp1.png
+
+│   │   ├── exp2.png
+
+│   │   ├── exp3.png
+
+│   │   └── exp4.png
+
+│   │
+
+│   ├── pdfs/
+
+│   │   ├── OFBD_Paper.pdf
+
+│   │   └── OFBD_Supplement.pdf
+
+│   │
+
+│   ├── css/
+
+│   └── js/
+
+```
+
+
+
+# Paper
+
+
+The paper and supplementary material are available below:
+
+
+- [Paper](static/pdfs/OFBD_Paper.pdf)
+
+- [Supplementary Material](static/pdfs/OFBD_Supplement.pdf)
+
+
+
+# Citation
+
+
+If you find OFBD useful for your research, please cite:
+
+
+```bibtex
+@inproceedings{chen2026ofbd,
+
+title={OFBD: Object-Focused Background Debiasing for Long-Tailed Learning},
+
+author={Chen, Shenghan and Liu, Yiming and Deng, Zhipeng and Wang, Haolin and Zhou, Jiale and Wu, Zhijian and Lu, Xiankai and Ou, Yafei and Zheng, Yefeng},
+
+booktitle={Advances in Neural Information Processing Systems},
+
+year={2026}
+
+}
+```
+
+
+
+# Acknowledgements
+
+
+OFBD incorporates code from previous open-source projects.
+
+Please refer to the corresponding licenses and acknowledgements for third-party components.
+
+
